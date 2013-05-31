@@ -403,13 +403,19 @@ Quick.RendererDOM.prototype.renderElement = function (element) {
     }
 
     for (name in element._dirtyProperties) {
-        if (name === 'className' && element[name] !== '') {
-            element.element.className = element[name];
-        } else if (name === 'scale') {
-            var s = element.scale.toFixed(10);
-            var tmp = "scale(" + s + ", " + s + ")";
+        if (name === 'scale' ||  name === 'top' || name === 'left') {
+            var s = element.scale ? element.scale : 1;
+            var y = element.top ? element.top : 0;
+            var x = element.left ? element.left : 0;
+            var tmp = "matrix(" + s + ", 0, 0, " + s + ", " + x + ", " + y + ")";
             element.element.style['-webkit-transform'] = tmp;
             element.element.style['transform'] = tmp;
+
+            delete element._dirtyProperties["scale"];
+            delete element._dirtyProperties["top"];
+            delete element._dirtyProperties["left"];
+        } else if (name === 'className' && element[name] !== '') {
+            element.element.className = element[name];
         } else if (name === '-text') {
             element.element.innerHTML = element[name];
         } else if (name === '-image-src') {
