@@ -405,13 +405,16 @@ Quick.RendererDOM.prototype.renderElement = function (element) {
     }
 
     for (name in element._dirtyProperties) {
-        if (name === 'scale' ||  name === 'top' || name === 'left') {
+        if (name === 'scale' ||  name === 'top' || name === 'left' || name === 'rotate') {
             var s = element.scale ? element.scale : 1;
             var y = element.top ? element.top : 0;
             var x = element.left ? element.left : 0;
-            var tmp = "matrix(" + s + ", 0, 0, " + s + ", " + x + ", " + y + ")";
-            element.element.style['-webkit-transform'] = tmp;
-            element.element.style['transform'] = tmp;
+            var r = element.rotate ? element.rotate : 0;
+
+            var transform = "rotate(" + r + "deg) matrix(" + s + ", 0, 0, " + s + ", " + x + ", " + y + ")";
+            element.element.style['-webkit-transform'] = transform;
+            element.element.style['transform'] = transform;
+            element.element.style['-webkit-transform-origin'] = (x + element.width/2) + " " + (y + element.height/2);
 
             delete element._dirtyProperties["scale"];
             delete element._dirtyProperties["top"];
