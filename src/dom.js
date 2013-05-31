@@ -232,6 +232,8 @@ Quick.RendererDOM.prototype.createElement = function (typeHint, object) {
     } else {
         elem = document.createElement('div');
         elem.style.position = 'absolute';
+        elem.style.left = '0px';
+        elem.style.top = '0px';
     }
 
     // set id attribute
