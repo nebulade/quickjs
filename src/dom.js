@@ -231,10 +231,11 @@ Quick.RendererDOM.prototype.createElement = function (typeHint, object) {
         elem = document.createElement('img');
     } else {
         elem = document.createElement('div');
-        elem.style.position = 'absolute';
-        elem.style.left = '0px';
-        elem.style.top = '0px';
     }
+
+    elem.style.position = 'absolute';
+    elem.style.left = '0px';
+    elem.style.top = '0px';
 
     // set id attribute
     if (object.id) {
@@ -411,14 +412,18 @@ Quick.RendererDOM.prototype.renderElement = function (element) {
             var x = element.left ? element.left : 0;
             var r = element.rotate ? element.rotate : 0;
 
-            var transform = "rotate(" + r + "deg) matrix(" + s + ", 0, 0, " + s + ", " + x + ", " + y + ")";
+            var transform = "scale(" + s + ") rotate(" + r + "deg) translate(" + x + "px, " + y + "px)";
+            var origin = (x + element.width/2) + " " + (y + element.height/2);
+
             element.element.style['-webkit-transform'] = transform;
             element.element.style['transform'] = transform;
-            element.element.style['-webkit-transform-origin'] = (x + element.width/2) + " " + (y + element.height/2);
+            element.element.style['-webkit-transform-origin'] = origin;
+            element.element.style['transform-origin'] = origin;
 
-            delete element._dirtyProperties["scale"];
-            delete element._dirtyProperties["top"];
-            delete element._dirtyProperties["left"];
+            delete element._dirtyProperties.scale;
+            delete element._dirtyProperties.rotate;
+            delete element._dirtyProperties.top;
+            delete element._dirtyProperties.left;
         } else if (name === 'className' && element[name] !== '') {
             element.element.className = element[name];
         } else if (name === '-text') {
