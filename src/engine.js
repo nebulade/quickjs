@@ -92,7 +92,11 @@ if (!Quick.Engine) {
         }
 
         ret.start = function () {
-            renderInterval = window.setInterval(advance, 1000/60.0);
+            if (Quick.verbose) {
+                renderInterval = window.setInterval(advance, 0);
+            } else {
+                renderInterval = window.setInterval(advance, 1000 / 60);
+            }
             advance();
         };
 

@@ -231,8 +231,11 @@ Quick.RendererDOM.prototype.createElement = function (typeHint, object) {
         elem = document.createElement('img');
     } else {
         elem = document.createElement('div');
-        elem.style.position = 'absolute';
     }
+
+    elem.style.position = 'absolute';
+    elem.style.left = '0px';
+    elem.style.top = '0px';
 
     // set id attribute
     if (object.id) {
@@ -403,13 +406,26 @@ Quick.RendererDOM.prototype.renderElement = function (element) {
     }
 
     for (name in element._dirtyProperties) {
-        if (name === 'className' && element[name] !== '') {
+        if (name === 'scale' ||  name === 'top' || name === 'left' || name === 'rotate') {
+            var s = element.scale ? element.scale : 1;
+            var y = element.top ? element.top : 0;
+            var x = element.left ? element.left : 0;
+            var r = element.rotate ? element.rotate : 0;
+
+            var transform = "scale(" + s + ") rotate(" + r + "deg) translate(" + x + "px, " + y + "px)";
+            var origin = (x + element.width/2) + " " + (y + element.height/2);
+
+            element.element.style['-webkit-transform'] = transform;
+            element.element.style['transform'] = transform;
+            element.element.style['-webkit-transform-origin'] = origin;
+            element.element.style['transform-origin'] = origin;
+
+            delete element._dirtyProperties.scale;
+            delete element._dirtyProperties.rotate;
+            delete element._dirtyProperties.top;
+            delete element._dirtyProperties.left;
+        } else if (name === 'className' && element[name] !== '') {
             element.element.className = element[name];
-        } else if (name === 'scale') {
-            var s = element.scale.toFixed(10);
-            var tmp = "scale(" + s + ", " + s + ")";
-            element.element.style['-webkit-transform'] = tmp;
-            element.element.style['transform'] = tmp;
         } else if (name === '-text') {
             element.element.innerHTML = element[name];
         } else if (name === '-image-src') {

@@ -37,6 +37,18 @@
                 }
 
                 Item {
+                    id: baz;
+                    left: 400
+                    top: 400
+                    backgroundColor: config.normalTextColor
+                    rotate: 0
+
+                    Behavior {
+                        -webkit-transform: "1000ms"
+                    }
+                }
+
+                Item {
                     id: bar;
                     left: 200
                     top: 40
@@ -47,6 +59,10 @@
             onmousemove: ^{
                 this.foo.bar.left = this.mouseAbsX - this.foo.bar.width/2
                 this.foo.bar.top = this.mouseAbsY - this.foo.bar.height/2
+            }^
+
+            onmousedown: ^{
+                this.foo.baz.rotate = this.foo.baz.rotate === 170 ? -30 : 170;
             }^
         }
 
